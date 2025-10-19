@@ -1,9 +1,10 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import LoginModal from "@/components/LoginModal";
 import { useAuth } from "@/context/AuthContext";
 import { initSampleData, listModifications } from "@/lib/store";
+import Image from "next/image";
 
 export default function Home() {
   const { user } = useAuth();
@@ -12,24 +13,44 @@ export default function Home() {
     initSampleData();
   }, []);
 
+  // Offset pour l'effet de déplacement de l'image au scroll
+  const [offset, setOffset] = useState(0);
+  useEffect(() => {
+    let raf = 0;
+    const update = () =>
+      setOffset((window.scrollY || window.pageYOffset) * 0.15);
+    const onScroll = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(update);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
   const mods = user ? listModifications(3) : [];
 
   return (
     <div className="radial-blue-bg h-full overflow-hidden">
       {!user && <LoginModal />}
-      <div className="mx-auto max-w-5xl h-full px-4 pb-0 grid grid-rows-[calc((100vh-3.5rem)*0.35)_1fr] gap-0">
-        <div className="flex items-start justify-center">
+      <div className="mx-auto max-w-5xl h-full px-4 pb-0 grid grid-rows-[35svh_1fr] gap-0">
+        <div className="relative z-40 flex items-start justify-center">
           <img
-            src="/Blason_noborder.png"
+            src="/Blason-noborder-v2.png"
             alt="Blason familial"
             className="h-full w-auto max-h-[calc((100vh-3.5rem)*0.35)] drop-shadow-lg"
           />
         </div>
         <div className="flex flex-col items-center text-center overflow-hidden gap-3">
           <h1 className="text-4xl font-semibold tracking-tight">
-            Recettes Familiales
+            Bienvenue dans cet oasis de saveurs !
           </h1>
-          <p className="text-neutral-700">Nos traditions culinaires</p>
+          <p className="text-neutral-700 text-lg">
+            Voici nos plats culinaires préférées !
+          </p>
 
           {user ? (
             <>

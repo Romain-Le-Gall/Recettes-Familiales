@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import Header from "@/components/Header";
+import HeaderVisible from "@/components/HeaderVisible";
 import RouteScopedMain from "@/components/RouteScopedMain";
 
 const geistSans = Geist({
@@ -28,7 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-50 text-neutral-900`}>
         <AuthProvider>
           <div className="h-screen flex flex-col">
-            <Header />
+            <HeaderVisible />
             <RouteScopedMain>
               {children}
             </RouteScopedMain>
